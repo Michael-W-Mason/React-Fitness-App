@@ -1,6 +1,7 @@
 import './App.css';
 import Workout from './components/workout/Workout'
 import NavBar from './components/Navbar';
+import Goals from './components/goals/Goals';
 import {
   BrowserRouter,
   Switch,
@@ -16,6 +17,9 @@ function App() {
         <Switch>
           <Route path="/Workout">
             <Workout/>
+          </Route>
+          <Route path="/Home">
+            <Goals/>
           </Route>
         </Switch>
       </BrowserRouter>
