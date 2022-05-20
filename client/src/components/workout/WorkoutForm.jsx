@@ -19,7 +19,7 @@ const WorkoutForm = (props) => {
         <form action="" className='flex flex-col justify-evenly'>
             {/* Workout Name */}
             <div className='flex flex-col justify-center'>
-                <label htmlFor="workoutname" className='mb-2 text-center self-center block text-lg font-bold'>Name of Workout:</label>
+                <label htmlFor="workoutname" className='mb-2 self-center block text-lg font-bold text-center'>Name of Workout:</label>
                 <input name='workoutname' type="text" placeholder="Name of Your Workout" className='mx-auto text-center self-center p-2 text-gray-900 border text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-3/5' />
             </div>
             <hr className='mt-3'/>
