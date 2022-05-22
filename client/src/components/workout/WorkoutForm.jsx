@@ -37,7 +37,7 @@ const WorkoutForm = (props) => {
                     })
                 }
             </div>
-            <button type='submit' className='w-1/5 self-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>Add Workout</button>
+            <button type='submit' className='w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>Add Workout</button>
         </form>
     );
 }
