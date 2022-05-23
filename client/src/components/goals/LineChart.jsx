@@ -28,7 +28,7 @@ const LineChart = (props) => {
         labels,
         datasets: [
             {
-                label: 'My First Dataset',
+                label: 'Log Point',
                 data: props.data.map(ele => ele.val),
                 backgroundColor: 'rgb(26,86,219)',
                 borderColor: 'rgb(26,86,219)',

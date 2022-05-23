@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const GoalForm = props => {
+    const history = useHistory();
     const [formData, setFormData] = useState({
         name: "",
         unit: "",
@@ -10,7 +12,6 @@ const GoalForm = props => {
 
     function changeHandler(e) {
         e.preventDefault();
-        console.log(e.target.name, e.target.value)
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -27,6 +28,7 @@ const GoalForm = props => {
                     unit: "",
                     goal: 0
                 });
+                history.push("/goals");
             })
             .catch(err => {
                 console.log(err);
