@@ -4,6 +4,7 @@ import NavBar from './components/Navbar';
 import Goals from './components/goals/Goals';
 import GoalForm from './components/goals/GoalsForm';
 import EditGoalForm from './components/goals/EditGoalForm';
+import WorkoutList from './components/workout/WorkoutList';
 import {
   BrowserRouter,
   Switch,
@@ -17,8 +18,11 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <Switch>
-          <Route path="/workout">
+          <Route path="/workout/create">
             <Workout />
+          </Route>
+          <Route path="/workout/all">
+            <WorkoutList />
           </Route>
           <Route path="/goals/edit_goal/:id">
             <EditGoalForm />

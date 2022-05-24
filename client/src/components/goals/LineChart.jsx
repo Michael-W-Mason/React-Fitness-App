@@ -23,7 +23,7 @@ ChartJS.register(
 
 const LineChart = (props) => {
 
-    const labels = props.data.map(ele => ele.updatedAt);
+    const labels = props.data.map(ele => formatDate(ele.updatedAt));
     const data = {
         labels,
         datasets: [
@@ -64,6 +64,11 @@ const LineChart = (props) => {
             }
         }
     };
+    function formatDate(str) {
+        let date = Date.parse(str);
+        let dateStr = new Date(date);
+        return `${dateStr.toDateString()}`
+    }
     return (
         <Line data={data} options={options} />
     )

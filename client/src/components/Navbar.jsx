@@ -27,10 +27,10 @@ const NavBar = (props) => {
                     <div id="dropdownWorkout" className="z-10 hidden bg-gray-50 divide-y divide-gray-100 rounded shadow w-44">
                         <ul className="py-1 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
                             <li>
-                                <Link to="/workout" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Create a Workout</Link>
+                                <Link to="/workout/create" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Create a Workout</Link>
                             </li>
                             <li>
-                                <Link to="/Home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Your Workouts</Link>
+                                <Link to="/workout/all" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Your Workouts</Link>
                             </li>
                         </ul>
                     </div>

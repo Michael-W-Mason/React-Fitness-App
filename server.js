@@ -8,4 +8,5 @@ app.use(cors());
 require("./server/config/mongoose.config");
 app.use(express.json(), express.urlencoded({ extended: true }));
 require("./server/routes/goal.routes")(app);
+require("./server/routes/workout.routes")(app);
 app.listen(port, () => console.log(`Listening on port: ${port}`));

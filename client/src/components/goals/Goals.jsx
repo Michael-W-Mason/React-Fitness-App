@@ -8,8 +8,8 @@ const Goals = (props) => {
 
 
     const [goalObj, setgoalObj] = useState([])
+    const [formData, setFormData] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(true);
-    const [formData, setFormData] = useState({});
 
     useEffect(() => {
         if(formSubmitted){
@@ -17,6 +17,7 @@ const Goals = (props) => {
                 .then(res => {
                     console.log(res);
                     setgoalObj(res.data.goal);
+                    setFormData(res.data.goal);
                 })
                 .catch(err => {
                     console.log(err);
@@ -60,7 +61,7 @@ return (
                             <LineChart data={val.data} goal={val.goal} unit={val.unit} />
                         </div>
                         <div className="p-4 border-l-2 flex flex-col items-center justify-around gap-5">
-                            <Link className="self-end relative translate-x-5 -translate-y-5" to={`/goals/edit_goal/${val._id}`} ><CogIcon className="h-6 w-6  hover:text-blue-500 focus:text-blue-500" /></Link>
+                            <Link className="self-end relative translate-x-2 -translate-y-12" to={`/goals/edit_goal/${val._id}`} ><CogIcon className="h-6 w-6  hover:text-blue-500 focus:text-blue-500" /></Link>
                             <h3 className='block text-lg font-bold'>{val.name}</h3>
                             <form className='flex flex-col items-center gap-5' onSubmit={(e) => submitHandler(e, i)}>
                                 <label htmlFor="val" className="block text-lg font-bold">Log Goal:</label>

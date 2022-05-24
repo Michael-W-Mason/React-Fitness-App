@@ -12,9 +12,7 @@ const EditGoalForm = props => {
         unit: "",
         goal: null,
     })
-    const [goalData, setGoalData] = useState([{
-        val: null,
-    }])
+    const [goalData, setGoalData] = useState([])
     const [goalDataForm, setGoalDataForm] = useState([{
         val: null,
     }])
@@ -24,18 +22,18 @@ const EditGoalForm = props => {
             axios.get(`http://localhost:8000/api/goals/${id.id}`)
                 .then(res => {
                     console.log(res);
+                    setGoalData([...res.data.goal.data]);
                     setFormData({
                         ...formData,
                         name: res.data.goal.name,
                         unit: res.data.goal.unit,
                         goal: res.data.goal.goal,
                     });
-                    setGoalData([...res.data.goal.data])
+                    setRefresh(false);
                 })
                 .catch(err => console.log(err));
-            setRefresh(false);
         }
-    }, [refresh, goalData])
+    }, [refresh])
 
 
     function changeHandler(e) {
@@ -73,8 +71,7 @@ const EditGoalForm = props => {
         axios.delete(`http://localhost:8000/api/goals/data/${id.id}/${ele}`)
         .then(res => {
             console.log(res);
-        })
-        .then(() => {
+            setGoalData([]);
             setRefresh(true);
         })
         .catch(err => {
@@ -110,7 +107,7 @@ const EditGoalForm = props => {
 
     return (
         <div className="flex flex-col max-w-5xl mx-auto">
-            <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 translate-y-8 translate-x-2 cursor-pointer" onClick={deleteGoal} />
+            <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 translate-y-8 translate-x-2 cursor-pointer" onClick={() => deleteGoal} />
             <div className="w-full mx-auto bg-white p-14 border-2 border-gray-100 shadow-md mt-6">
                 <form className='flex flex-col justify-evenly gap-10' onSubmit={submitHandler}>
                     {/* Workout Name */}
@@ -132,14 +129,14 @@ const EditGoalForm = props => {
                     goalData.map((ele, i) => {
                         return (
                             <div className="p-4 bg-white border-2 shadow-md" key={i}>
-                                <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 -translate-y-2 -translate-x-2 cursor-pointer" onClick={() => deleteGoalPoint(ele._id)} />
-                                <form className="flex flex-col items-center text-center justify-evenly whitespace-nowrap gap-2" onSubmit={(e) => goalHandler(e, ele._id)}>
+                                <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 -translate-y-2 -translate-x-2 cursor-pointer" onClick={() => deleteGoalPoint(goalData[i]._id)} />
+                                <form className="flex flex-col items-center text-center justify-evenly whitespace-nowrap gap-2" onSubmit={(e) => goalHandler(e, goalData[i]._id)}>
                                     <div className="flex flex-row gap-2 items-center justify-center">
                                         <label className="text-sm font-bold " htmlFor="val">Value:</label>
-                                        <input name="val" type="number" defaultValue={ele.val} onChange={goalDataChangeHandler} className="text-center text-sm p-1 text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                        <input name="val" type="number" defaultValue={goalData[i].val} onChange={goalDataChangeHandler} className="text-center text-sm p-1 text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                     </div>
                                     <div>
-                                        <p className="text-sm">Date Created: {formatDate(ele.updatedAt)}</p>
+                                        <p className="text-sm">Date Created: {formatDate(goalData[i].updatedAt)}</p>
                                     </div>
                                     <button type="submit" className="text-white w-2/5 bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-2 py-1 text-center">Update Point</button>
                                 </form>
