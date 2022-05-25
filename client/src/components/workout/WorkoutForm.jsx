@@ -1,24 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SetRep from './SetRep';
 import Circuit from './Circuit';
 import TimeDist from './TimeDist';
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 
 const WorkoutForm = (props) => {
+    const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+    const defaultWorkoutStep = { type: "" };
+
     const [workoutForm, setWorkoutForm] = useState({
         name: "",
-        workout: [{
-        }]
-    })
-    const history = useHistory()
+        workout: [{ ...defaultWorkoutStep, _id: ObjectId() }],
+    });
+
+    const history = useHistory();
+
+    const id = useParams();
+
+    useEffect(() => {
+        if (id.id) {
+            axios.get(`http://localhost:8000/api/workouts/${id.id}`)
+                .then(res => {
+                    console.log(res);
+                    let editForm = structuredClone(res.data.workout);
+                    editForm.workout.push({ type: "", _id: ObjectId()});
+                    setWorkoutForm(editForm);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }, [])
 
     function formType(type, i) {
         switch (type) {
-            case "sets": return (<SetRep setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} />)
-            case "circuit": return (<Circuit setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} />)
-            case "timedist": return (<TimeDist setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} />)
+            case "sets": return (<SetRep setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} ObjectId={ObjectId} />)
+            case "circuit": return (<Circuit setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} ObjectId={ObjectId} />)
+            case "timedist": return (<TimeDist setWorkoutForm={setWorkoutForm} workoutForm={workoutForm} index={i} ObjectId={ObjectId} />)
             default: return (<></>)
         }
     }
@@ -30,72 +50,104 @@ const WorkoutForm = (props) => {
 
     function typeChange(e, index) {
         e.preventDefault();
-        let workoutType = workoutForm;
-        workoutType.workout[index].type = e.target.value;
-        if (index === workoutForm.workout.length - 1) {
-            setWorkoutForm({
-                ...workoutForm,
-                workout: [...workoutType.workout, {}]
-            })
+
+        let temp = structuredClone(workoutForm);
+        if (index === temp.workout.length - 1) {
+            temp.workout.push({ ...defaultWorkoutStep, _id: ObjectId() });
         }
-        else{
-            setWorkoutForm({
-                ...workoutForm,
-                workout: [...workoutType.workout]
-            })
+        if (e.target.value === "") {
+            temp.workout.splice(index, 1);
+            temp.workout[temp.workout.length - 1] = { ...defaultWorkoutStep, _id: ObjectId() };
         }
+        else {
+            if (e.target.value === "sets") {
+                temp.workout[index] = { _id: ObjectId(), type: e.target.value, steps: [] };
+            }
+            else if (e.target.value === "circuit") {
+                temp.workout[index] = { _id: ObjectId(), rounds: "", type: e.target.value, steps: [] };
+            }
+            else if (e.target.value === "timedist") {
+                temp.workout[index] = { _id: ObjectId(), type: e.target.value };
+            }
+        }
+        setWorkoutForm(temp);
     }
 
-    function submitHandler(e){
+    function submitHandler(e) {
         e.preventDefault();
-        let tempForm = structuredClone(workoutForm);
-        for(let i in tempForm){
-            if(tempForm[i].name === ""){
-                alert("Name Required");
+        let temp = structuredClone(workoutForm);
+        for(let i = 0; i < temp.workout.length; i++){
+            let obj = temp.workout[i];
+            if(obj.type === ""){
+                temp.workout.splice(i, 1);
+                i--;
             }
-            else if(i === "workout"){
-                tempForm.workout.pop();
-                for(let j in tempForm.workout){
-                    let obj = tempForm.workout[j];
-                    if(obj.type === "sets"){
-                        obj.steps.pop();
-                    }
-                    else if(obj.type === "circuit"){
-                        obj.steps.pop();
+            else if(obj.type === "sets"){
+                for(let j = 0; j < obj.steps.length; j++){
+                    let step = obj.steps[j];
+                    if(step.movement === "" || step.reps === "" || step.sets === ""){
+                        obj.steps.splice(j, 1);
+                        j--;
                     }
                 }
             }
+            else if (obj.type === "circuit"){
+                for(let j = 0; j < obj.steps.length; j++){
+                    let step = obj.steps[j];
+                    if(step.movement === "" || step.reps === "" || step.units === ""){
+                        obj.steps.splice(j, 1);
+                        j--;
+                    }
+                }
+            }
+            else{
+                if(obj.movement === "" || obj.duration === "" || obj.units === ""){
+                    temp.workout.splice(i, 1);
+                    i--;
+                }
+            }
         }
-        console.log(tempForm);
-        axios.post("http://localhost:8000/api/workouts", {...tempForm})
-            .then(res => {
-                console.log(res);
-                setWorkoutForm({
-                    name: "",
-                    workout: [{
-                    }]
+        if (id.id) {
+            axios.put(`http://localhost:8000/api/workouts/${id.id}`, {...temp})
+                .then(res => {
+                    console.log(res);
+                    history.push("/workout/all")
+                })
+                .catch(err => {
+                    console.log(err);
                 });
-                history.push("/workout/all")
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        }
+        else {
+            axios.post("http://localhost:8000/api/workouts", { ...temp })
+                .then(res => {
+                    console.log(res);
+                    setWorkoutForm({
+                        name: "",
+                        workout: [{
+                        }]
+                    });
+                    history.push("/workout/all")
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     }
 
     return (
-        <form action="" className='flex flex-col justify-evenly my-2' onSubmit={submitHandler}>
+        <form className='flex flex-col justify-evenly my-2 max-w-5xl mx-auto bg-white p-14 border-2 border-gray-100 shadow-sm' onSubmit={submitHandler}>
             {/* Workout Name */}
             <div className='flex flex-col justify-center'>
                 <label htmlFor="name" className='mb-2 self-center block text-lg font-bold text-center'>Name of Workout:</label>
-                <input name='name' onChange={nameChange} type="text" placeholder="Name of Your Workout" className='mx-auto text-center self-center p-2 text-gray-900 border text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-3/5' />
+                <input defaultValue={workoutForm.name} name='name' onChange={nameChange} type="text" placeholder="Name of Your Workout" className='mx-auto text-center self-center p-2 text-gray-900 border text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-3/5' />
             </div>
             <hr className='mt-3' />
             <div className='flex flex-col justify-center m-5'>
                 {
                     workoutForm.workout.map((ele, i) => {
                         return (
-                            <div key={i} className="w-full">
-                                <select name="workouttype" onChange={(e) => typeChange(e, i)} className="mb-3 text-gray-900 text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <div key={ele._id} className="w-full">
+                                <select defaultValue={ele.type} name="workouttype" onChange={(e) => typeChange(e, i)} className="mb-3 text-gray-900 text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                     <option none="true" value="" default></option>
                                     <option value="sets">Sets</option>
                                     <option value="circuit">Circuit</option>
@@ -110,7 +162,7 @@ const WorkoutForm = (props) => {
                     })
                 }
             </div>
-            <button type='submit' className='w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>Add Workout</button>
+            <button type='submit' className='w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>{id.id? 'Update Workout' :'Add Workout'}</button>
         </form>
     );
 }

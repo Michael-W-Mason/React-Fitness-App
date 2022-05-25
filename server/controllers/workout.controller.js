@@ -1,17 +1,16 @@
 const Workout = require("../models/workout.model");
 
-// module.exports.findOneGoal = (req, res) => {
-//     Goal.findOne({ _id: req.params.id })
-//         .then(oneGoal => res.json({ goal: oneGoal }))
-//         .catch(err => res.json({ msg: "An Error Occured", error: err }));
-// }
+module.exports.findOneWorkout = (req, res) => {
+    Workout.findOne({ _id: req.params.id })
+        .then(oneWorkout => res.json({ workout: oneWorkout }))
+        .catch(err => res.json({ msg: "An Error Occured", error: err }));
+}
 
 module.exports.findAllWorkouts = (req, res) => {
     Workout.find()
         .then(allWorkouts => res.json({ workout: allWorkouts }))
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
-
 
 module.exports.createWorkout = (req, res) => {
     Workout.create(req.body)
@@ -21,13 +20,13 @@ module.exports.createWorkout = (req, res) => {
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
 
-// module.exports.editGoal = (req, res) => {
-//     Goal.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
-//         .then(editGoal => {
-//             res.json({ goal: editGoal })
-//         })
-//         .catch(err => res.json({ msg: "An Error Occured", error: err }));
-// }
+module.exports.editWorkout = (req, res) => {
+    Workout.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+        .then(editedWorkout => {
+            res.json({ workout: editedWorkout })
+        })
+        .catch(err => res.json({ msg: "An Error Occured", error: err }));
+}
 
 // module.exports.deleteGoal = (req, res) => {
 //     Goal.findOneAndDelete({ _id: req.params.id })

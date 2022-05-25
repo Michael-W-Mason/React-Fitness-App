@@ -1,43 +1,33 @@
 import { useEffect, useState } from "react";
 
 const SetRep = props => {
-    const defaultStep = { movement: "", sets: 0, reps: 0 };
-    const defaultRepSet = { type: "sets", steps: [defaultStep] };
-    const [repSetWorkout, setRepSetWorkout] = useState(defaultRepSet);
+    const _ = require("lodash");
+    const defaultStep = { movement: "", sets: "", reps: "" };
+    const [repSetWorkout, setRepSetWorkout] = useState(props.workoutForm.workout[props.index]);
 
     useEffect(() => {
-        let beforeArr = props.workoutForm.workout.slice(0, props.index);
-        let afterArr = props.workoutForm.workout.slice(props.index + 1, props.workoutForm.workout.length);
-        props.setWorkoutForm({
-            ...props.workoutForm,
-            workout: [...beforeArr, repSetWorkout, ...afterArr]
-        })
+        let temp = structuredClone(repSetWorkout);
+        temp.steps.push({...defaultStep, _id : props.ObjectId()});
+        setRepSetWorkout(temp);
+    }, [])
+
+    useEffect(() => {
+        let temp = structuredClone(props.workoutForm);
+        temp.workout[props.index] = repSetWorkout;
+        props.setWorkoutForm(temp);
     }, [repSetWorkout])
 
     function changeHandler(e, index) {
-        e.preventDefault();
-        let startHalf = repSetWorkout.steps.slice(0, index);
-        let endHalf = repSetWorkout.steps.slice(index + 1, repSetWorkout.steps.length);
-        let current = repSetWorkout.steps[index];
-        current = {
-            ...current,
-            [e.target.name]: e.target.value
-        };
-        setRepSetWorkout((p) => ({
-            ...p,
-            steps: [...startHalf, current, ...endHalf]
-        }))
-        stepChange(e, index)       
-    }
-
-    function stepChange(e, index) {
-        e.preventDefault();
-        if (index === repSetWorkout.steps.length - 1) {
-            setRepSetWorkout((p) => ({
-                ...p,
-                steps: [...p.steps, defaultStep]
-            }));
+        let temp = structuredClone(repSetWorkout);
+        let current = temp.steps[index];
+        current[e.target.name] = e.target.value;
+        if(index === temp.steps.length - 1){
+            temp.steps.push({...defaultStep, _id : props.ObjectId()});
         }
+        if(_.isEqual(current, {...defaultStep, _id : current._id})){
+            temp.steps.splice(index, 1);
+        }
+        setRepSetWorkout(temp);      
     }
 
     return (
@@ -45,11 +35,11 @@ const SetRep = props => {
             {
                 repSetWorkout.steps.map((ele, i) => {
                     return (
-                        <div key={i} className="flex flex-row mb-3 gap-2">
-                            <input type="text" name="movement" placeholder="Movement Name" onChange={(e) => changeHandler(e, i)} className="text-gray-900 text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                            <input type="number" name="sets" placeholder="Sets" className="text-gray-900 text-center text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)}/>
+                        <div key={ele._id} className="flex flex-row mb-3 gap-2">
+                            <input defaultValue={ele.movement} type="text" name="movement" placeholder="Movement Name" onChange={(e) => changeHandler(e, i)} className="text-gray-900 text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                            <input defaultValue={ele.sets} type="number" name="sets" placeholder="Sets" className="text-gray-900 text-center text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)}/>
                             <p className="text-center self-center text-base text-gray-900">x</p>
-                            <input type="number" name="reps" placeholder="Reps" className="text-gray-900 text-center text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)}/>
+                            <input defaultValue={ele.reps} type="number" name="reps" placeholder="Reps" className="text-gray-900 text-center text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)}/>
                         </div>
                     )
                 })
