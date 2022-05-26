@@ -28,13 +28,13 @@ module.exports.editWorkout = (req, res) => {
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
 
-// module.exports.deleteGoal = (req, res) => {
-//     Goal.findOneAndDelete({ _id: req.params.id })
-//         .then(deletedGoal => {
-//             res.json({ goal: deletedGoal })
-//         })
-//         .catch(err => res.json({ msg: "An Error Occured", error: err }));
-// }
+module.exports.deleteWorkout = (req, res) => {
+    Workout.findOneAndDelete({ _id: req.params.id })
+        .then(deletedWorkout => {
+            res.json({ workout: deletedWorkout })
+        })
+        .catch(err => res.json({ msg: "An Error Occured", error: err }));
+}
 
 // module.exports.updateGoalData = (req, res) => {
 //     Goal.findOne({_id : req.params.id})

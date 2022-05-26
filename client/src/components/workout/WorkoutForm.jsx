@@ -4,6 +4,7 @@ import Circuit from './Circuit';
 import TimeDist from './TimeDist';
 import axios from 'axios';
 import { useHistory, useParams } from "react-router-dom";
+import { TrashIcon } from "@heroicons/react/outline";
 
 
 const WorkoutForm = (props) => {
@@ -134,8 +135,19 @@ const WorkoutForm = (props) => {
         }
     }
 
+    function deleteWorkout(e){
+        e.preventDefault();
+        axios.delete(`http://localhost:8000/api/workouts/${id.id}`)
+            .then(res => {
+                console.log(res);
+                history.push("/workout/all");
+            })
+            .catch(err => console.log(err));
+    }
+
     return (
         <form className='flex flex-col justify-evenly my-2 max-w-5xl mx-auto bg-white p-14 border-2 border-gray-100 shadow-sm' onSubmit={submitHandler}>
+            <div>{id.id ? <TrashIcon className='cursor-pointer w-6 h-6 text-red-500 hover:text-red-700' onClick={deleteWorkout} /> : ""}</div>
             {/* Workout Name */}
             <div className='flex flex-col justify-center'>
                 <label htmlFor="name" className='mb-2 self-center block text-lg font-bold text-center'>Name of Workout:</label>

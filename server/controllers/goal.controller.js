@@ -52,7 +52,6 @@ module.exports.updateGoalData = (req, res) => {
 module.exports.deleteGoalData = (req, res) => {
     Goal.findOne({_id : req.params.id})
         .then((doc) => {
-            console.log(doc);
             doc.data.pull({_id : req.params.ele})
             doc.save();
             res.json({ data : doc })

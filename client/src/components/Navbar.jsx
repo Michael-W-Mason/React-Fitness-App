@@ -7,7 +7,7 @@ const NavBar = (props) => {
         <nav className="sticky flex items-center top-0 z-50 p-2 bg-blue-700 min-h-66">
             {/* Title of Company */}
             <div className="text-gray-200 mx-5 w-1/3">
-                <h1 className="font-semibold text-xl">MyWorkoutPal 🏋️‍♂️</h1>
+                <h1 className="select-none font-semibold text-xl">MyWorkoutPal 🏋️‍♂️</h1>
             </div>
             {/* Navigation Buttons */}
             <div className="mx-auto w-1/3 flex justify-center">
@@ -34,17 +34,7 @@ const NavBar = (props) => {
                             </li>
                         </ul>
                     </div>
-                    <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownSchedule" className="hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-base font-medium">Schedule 📅</button>
-                    <div id="dropdownSchedule" className="z-10 hidden bg-gray-50 divide-y divide-gray-100 rounded shadow w-44">
-                        <ul className="py-1 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
-                            <li>
-                                <Link to="/Home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today's Workout</Link>
-                            </li>
-                            <li>
-                                <Link to="/Home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Plan your Week</Link>
-                            </li>
-                        </ul>
-                    </div>
+                    <button className="hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-base font-medium"><Link to="/schedule">Schedule 📅</Link></button>
                 </div>
             </div>
             {/* Profile */}

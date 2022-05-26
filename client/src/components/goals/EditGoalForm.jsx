@@ -6,7 +6,6 @@ import { TrashIcon } from "@heroicons/react/outline";
 const EditGoalForm = props => {
     const id = useParams();
     const history = useHistory();
-    const [refresh, setRefresh] = useState(true);
     const [formData, setFormData] = useState({
         name: "",
         unit: "",
@@ -18,22 +17,19 @@ const EditGoalForm = props => {
     }])
 
     useEffect(() => {
-        if(refresh){
-            axios.get(`http://localhost:8000/api/goals/${id.id}`)
-                .then(res => {
-                    console.log(res);
-                    setGoalData([...res.data.goal.data]);
-                    setFormData({
-                        ...formData,
-                        name: res.data.goal.name,
-                        unit: res.data.goal.unit,
-                        goal: res.data.goal.goal,
-                    });
-                    setRefresh(false);
-                })
-                .catch(err => console.log(err));
-        }
-    }, [refresh])
+        axios.get(`http://localhost:8000/api/goals/${id.id}`)
+            .then(res => {
+                console.log(res);
+                setGoalData([...res.data.goal.data]);
+                setFormData({
+                    ...formData,
+                    name: res.data.goal.name,
+                    unit: res.data.goal.unit,
+                    goal: res.data.goal.goal,
+                });
+            })
+            .catch(err => console.log(err));
+    }, [])
 
 
     function changeHandler(e) {
@@ -67,17 +63,15 @@ const EditGoalForm = props => {
         history.push("/goals");
     }
 
-    function deleteGoalPoint(ele){
+    function deleteGoalPoint(ele) {
         axios.delete(`http://localhost:8000/api/goals/data/${id.id}/${ele}`)
-        .then(res => {
-            console.log(res);
-            setGoalData([]);
-            setRefresh(true);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
     }
 
     function goalDataChangeHandler(e) {
@@ -128,7 +122,7 @@ const EditGoalForm = props => {
                 {
                     goalData.map((ele, i) => {
                         return (
-                            <div className="p-4 bg-white border-2 shadow-md" key={i}>
+                            <div className="p-4 bg-white border-2 shadow-md" key={ele._id}>
                                 <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 -translate-y-2 -translate-x-2 cursor-pointer" onClick={() => deleteGoalPoint(goalData[i]._id)} />
                                 <form className="flex flex-col items-center text-center justify-evenly whitespace-nowrap gap-2" onSubmit={(e) => goalHandler(e, goalData[i]._id)}>
                                     <div className="flex flex-row gap-2 items-center justify-center">

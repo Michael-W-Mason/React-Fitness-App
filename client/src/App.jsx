@@ -10,6 +10,7 @@ import {
   Route,
 } from "react-router-dom";
 import WorkoutForm from './components/workout/WorkoutForm';
+import Schedule from './components/schedule/Schedule';
 
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
           </Route>
           <Route path="/goals">
             <Goals />
+          </Route>
+          <Route path="/schedule">
+            <Schedule />
           </Route>
         </Switch>
       </BrowserRouter>
