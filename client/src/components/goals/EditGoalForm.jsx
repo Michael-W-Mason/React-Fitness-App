@@ -6,6 +6,7 @@ import { TrashIcon } from "@heroicons/react/outline";
 const EditGoalForm = props => {
     const id = useParams();
     const history = useHistory();
+    const [refresh, setRefresh] = useState(true);
     const [formData, setFormData] = useState({
         name: "",
         unit: "",
@@ -15,25 +16,43 @@ const EditGoalForm = props => {
     const [goalDataForm, setGoalDataForm] = useState([{
         val: null,
     }])
+    const [changesArr, setChangesArr] = useState([]);
+    const [mainFormChange, setMainFormChange] = useState(false);
+
+    const dataClassUnchange = "text-white w-2/5 bg-green-500 hover:bg-green-800 focus:outline-none font-medium rounded-full text-sm px-2 py-1 text-center";
+    const dataClassChange = "text-white w-2/5 bg-amber-500 hover:bg-amber-800 focus:outline-none font-medium rounded-full text-sm px-2 py-1 text-center"
+
+    const mainClassChange = "w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
+    const mainClassUnChange = "w-1/5 self-center text-white bg-green-500 hover:bg-green-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/goals/${id.id}`)
-            .then(res => {
-                console.log(res);
-                setGoalData([...res.data.goal.data]);
-                setFormData({
-                    ...formData,
-                    name: res.data.goal.name,
-                    unit: res.data.goal.unit,
-                    goal: res.data.goal.goal,
-                });
-            })
-            .catch(err => console.log(err));
-    }, [])
+        if(refresh){
+            axios.get(`http://localhost:8000/api/goals/${id.id}`)
+                .then(res => {
+                    console.log(res);
+                    setGoalData([...res.data.goal.data]);
+                    setFormData({
+                        ...formData,
+                        name: res.data.goal.name,
+                        unit: res.data.goal.unit,
+                        goal: res.data.goal.goal,
+                    });
+                    setRefresh(false);
+                })
+                .catch(err => console.log(err));
+        }
+    }, [refresh])
+
+    useEffect(() => {
+        if(goalData.length < 0){
+            setChangesArr(goalData.map(() => false));
+        }
+    }, [goalData])
 
 
     function changeHandler(e) {
         e.preventDefault();
+        setMainFormChange(true);
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -63,10 +82,14 @@ const EditGoalForm = props => {
         history.push("/goals");
     }
 
-    function deleteGoalPoint(ele) {
+    function deleteGoalPoint(ele, i) {
         axios.delete(`http://localhost:8000/api/goals/data/${id.id}/${ele}`)
             .then(res => {
                 console.log(res);
+                let arr = [...changesArr];
+                arr.splice(i, 1);
+                setChangesArr(arr);
+                setRefresh(true);
             })
             .catch(err => {
                 console.log(err);
@@ -74,18 +97,24 @@ const EditGoalForm = props => {
 
     }
 
-    function goalDataChangeHandler(e) {
+    function goalDataChangeHandler(e, i) {
         e.preventDefault();
+        let arr = [...changesArr];
+        arr[i] = true;
+        setChangesArr([...arr]);
         setGoalDataForm({
             ...goalDataForm,
             [e.target.name]: e.target.value
         });
     }
 
-    function goalHandler(e, ele) {
+    function goalHandler(e, ele, i) {
         e.preventDefault();
         axios.put(`http://localhost:8000/api/goals/data/${id.id}/${ele}`, { ...goalDataForm })
             .then(res => {
+                let arr = [...changesArr];
+                arr[i] = false; 
+                setChangesArr([...arr]);
                 console.log(res);
             })
             .catch(err => {
@@ -115,7 +144,7 @@ const EditGoalForm = props => {
                         <label htmlFor="name" className='self-center block text-lg font-bold text-center'>Units:</label>
                         <input name='unit' type="text" placeholder="Units" className='text-center self-center p-2 text-gray-900 border text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-1/5' onChange={changeHandler} defaultValue={formData.unit} />
                     </div>
-                    <button type='submit' className='w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>Update Goal</button>
+                    <button type='submit' className={mainFormChange ? mainClassChange : mainClassUnChange}>{mainFormChange? "Update Goal" : "No Changes"}</button>
                 </form>
             </div>
             <div className="grid grid-cols-3 text-center my-4 gap-2">
@@ -123,16 +152,16 @@ const EditGoalForm = props => {
                     goalData.map((ele, i) => {
                         return (
                             <div className="p-4 bg-white border-2 shadow-md" key={ele._id}>
-                                <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 -translate-y-2 -translate-x-2 cursor-pointer" onClick={() => deleteGoalPoint(goalData[i]._id)} />
-                                <form className="flex flex-col items-center text-center justify-evenly whitespace-nowrap gap-2" onSubmit={(e) => goalHandler(e, goalData[i]._id)}>
+                                <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 -translate-y-2 -translate-x-2 cursor-pointer" onClick={() => deleteGoalPoint(goalData[i]._id, i)} />
+                                <form className="flex flex-col items-center text-center justify-evenly whitespace-nowrap gap-2" onSubmit={(e) => goalHandler(e, goalData[i]._id, i)}>
                                     <div className="flex flex-row gap-2 items-center justify-center">
                                         <label className="text-sm font-bold " htmlFor="val">Value:</label>
-                                        <input name="val" type="number" defaultValue={goalData[i].val} onChange={goalDataChangeHandler} className="text-center text-sm p-1 text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                        <input name="val" type="number" defaultValue={goalData[i].val} onChange={(e) => goalDataChangeHandler(e, i)} className="text-center text-sm p-1 text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                     </div>
                                     <div>
                                         <p className="text-sm">Date Created: {formatDate(goalData[i].updatedAt)}</p>
                                     </div>
-                                    <button type="submit" className="text-white w-2/5 bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-300 font-medium rounded-full text-sm px-2 py-1 text-center">Update Point</button>
+                                    <button type="submit" className={changesArr[i] ? dataClassChange : dataClassUnchange}>{changesArr[i] ? "Update Point" : "No Changes"}</button>
                                 </form>
                             </div>
                         )

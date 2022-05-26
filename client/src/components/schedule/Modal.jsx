@@ -31,7 +31,7 @@ const Modal = (props) => {
                     {
                         props.workout.workout.map((ele, i) => {
                             return(
-                                <div key={i}>
+                                <div key={i} className='w-full'>
                                     {parseWorkout(ele)}
                                     <hr className="m-2"/>
                                 </div>
