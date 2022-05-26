@@ -79,7 +79,8 @@ return (
                             <form className='flex flex-col items-center gap-5' onSubmit={(e) => submitHandler(e, i)}>
                                 <label htmlFor="val" className="block text-lg font-bold">Log Goal:</label>
                                 <div className="flex flex-row items-center justify-center text">
-                                    <input defaultValue={val.data[val.data.length - 1].val ? val.data[val.data.length - 1].val : ""} type="number" name="val" className="p-2 text-gray-900 border-y border-l text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)} />
+                                    {console.log(val)}
+                                    <input defaultValue={val.data.length ? val.data[val.data.length - 1].val : ""} type="number" name="val" className="p-2 text-gray-900 border-y border-l text-base border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-blue-500 focus:border-blue-500" onChange={(e) => changeHandler(e, i)} />
                                 </div>
                                 <button type='submit' className={changeArr[i] ? updateClassChange : updateClassUnChange}>{changeArr[i] ? "Update Goal" : "No Changes"}</button>
                             </form>

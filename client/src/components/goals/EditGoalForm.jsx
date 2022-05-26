@@ -75,11 +75,11 @@ const EditGoalForm = props => {
         axios.delete(`http://localhost:8000/api/goals/${id.id}`)
             .then(res => {
                 console.log(res);
+                history.push("/goals");
             })
             .catch(err => {
                 console.log(err);
             })
-        history.push("/goals");
     }
 
     function deleteGoalPoint(ele, i) {
@@ -130,7 +130,7 @@ const EditGoalForm = props => {
 
     return (
         <div className="flex flex-col max-w-5xl mx-auto">
-            <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 translate-y-8 translate-x-2 cursor-pointer" onClick={() => deleteGoal} />
+            <TrashIcon className="absolute w-6 h-6 text-red-500 hover:text-red-700 translate-y-8 translate-x-2 cursor-pointer" onClick={deleteGoal} />
             <div className="w-full mx-auto bg-white p-14 border-2 border-gray-100 shadow-md mt-6">
                 <form className='flex flex-col justify-evenly gap-10' onSubmit={submitHandler}>
                     {/* Workout Name */}

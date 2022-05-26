@@ -1,16 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/outline"
 import '../App.css';
 
 const NavBar = (props) => {
+
+    const history = useHistory()
+    function toSchedule(){
+        history.push("/schedule")
+    }
+    
     return (
-        <nav className="sticky flex items-center top-0 z-50 p-2 bg-blue-700 min-h-66">
+        <nav className="sticky flex items-center top-0 z-50 p-4 bg-blue-700 min-h-66">
             {/* Title of Company */}
-            <div className="text-gray-200 mx-5 w-1/3">
+            <div className="text-gray-200 mx-5 justify-self-start whitespace-nowrap">
                 <h1 className="select-none font-semibold text-xl">MyWorkoutPal 🏋️‍♂️</h1>
             </div>
             {/* Navigation Buttons */}
-            <div className="mx-auto w-1/3 flex justify-center">
+            <div className="flex justify-center absolute left-1/2 -translate-x-1/2">
                 <div className="flex items-center gap-20 text-gray-200">
                     <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownGoal" className="hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-base font-medium">Goals 🤩</button>
                     <div id="dropdownGoal" className="z-10 hidden bg-gray-50 divide-y divide-gray-100 rounded shadow w-44">
@@ -34,21 +40,7 @@ const NavBar = (props) => {
                             </li>
                         </ul>
                     </div>
-                    <button className="hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-base font-medium"><Link to="/schedule">Schedule 📅</Link></button>
-                </div>
-            </div>
-            {/* Profile */}
-            <div className="w-1/3 flex justify-end">
-                <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownProfile" className="flex justify-end hover:text-white px-3 py-2 rounded-md mx-5"><UserCircleIcon className="h-10 w-10 color-white" /></button>
-                <div id="dropdownProfile" className="z-10 hidden bg-gray-50 divide-y divide-gray-100 rounded shadow w-30 mx-5">
-                    <ul className="py-1 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
-                        <li>
-                            <Link to="/Home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Your Profile</Link>
-                        </li>
-                        <li>
-                            <Link to="/Home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign Out</Link>
-                        </li>
-                    </ul>
+                    <button className="hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-base font-medium" onClick={toSchedule}>Schedule 📅</button>
                 </div>
             </div>
         </nav>
