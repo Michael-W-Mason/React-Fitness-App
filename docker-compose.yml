@@ -2,7 +2,7 @@ version: '3.7'
 services:
   server:
     build:
-      context: ./
+      context: ./server
       dockerfile: dockerfile
     image: michaelmason1998/react-fitness-app/server
     container_name: React-Fitness-App-Server

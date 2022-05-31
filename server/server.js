@@ -5,9 +5,9 @@ const cors = require('cors');
 
 app.use(cors());
 
-require("./server/config/mongoose.config");
+require("./config/mongoose.config");
 app.use(express.json(), express.urlencoded({ extended: true }));
-require("./server/routes/goal.routes")(app);
-require("./server/routes/workout.routes")(app);
-require("./server/routes/calendar.routes")(app);
+require("./routes/goal.routes")(app);
+require("./routes/workout.routes")(app);
+require("./routes/calendar.routes")(app);
 app.listen(port, () => console.log(`Listening on port: ${port}`));
