@@ -14,9 +14,10 @@ import Schedule from './components/schedule/Schedule';
 
 
 function App() {
+  const baseName = process.env.REACT_APP_BASENAME || null;
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename={baseName}>
         <NavBar />
         <Switch>
           <Route path="/workout/create">

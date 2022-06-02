@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  server:
+  fitness-server:
     build:
       context: ./server
       dockerfile: dockerfile
@@ -8,23 +8,22 @@ services:
     container_name: React-Fitness-App-Server
     command: node server.js
     ports:
-      - "127.0.0.1:8000:8000"
+      - "8000:8000"
     networks:
       - app-network
-  client:
+  fitness-client:
     build:
       context: ./client
       dockerfile: dockerfile
     image: michaelmason1998/react-fitness-app/client
     container_name: React-Fitness-App-Client
     command: npm start
-    depends_on:
-      - server
     ports:
-      - "127.0.0.1:3000:3000"
+      - "3000:3000"
     networks:
       - app-network
-
+    depends_on:
+      - server
 networks:
-    app-network:
-        driver: bridge
+  app-network:
+    external: true
