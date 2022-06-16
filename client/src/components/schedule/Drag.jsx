@@ -5,7 +5,7 @@ import { Draggable } from "@fullcalendar/interaction";
 
 const Drag = props => {
     useEffect(() => {
-        axios.get("http://localhost:8000/api/workouts")
+        axios.get("http://localhost:8000/api/workouts", {withCredentials: true})
             .then(res => {
                 console.log(res);
                 props.setWorkoutArr(res.data.workout)

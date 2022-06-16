@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import SetRep from './SetRep';
 import Circuit from './Circuit';
 import TimeDist from './TimeDist';
 import axios from 'axios';
 import { useHistory, useParams } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/outline";
+import { UserContext } from '../context/UserContext';
 
 
 const WorkoutForm = (props) => {
+    const {userId, setUserId} = useContext(UserContext);
     const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
     const defaultWorkoutStep = { type: "" };
 
@@ -22,7 +24,7 @@ const WorkoutForm = (props) => {
 
     useEffect(() => {
         if (id.id) {
-            axios.get(`http://localhost:8000/api/workouts/${id.id}`)
+            axios.get(`http://localhost:8000/api/workouts/${id.id}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     let editForm = structuredClone(res.data.workout);
@@ -109,7 +111,7 @@ const WorkoutForm = (props) => {
             }
         }
         if (id.id) {
-            axios.put(`http://localhost:8000/api/workouts/${id.id}`, {...temp})
+            axios.put(`http://localhost:8000/api/workouts/${id.id}`, {...temp}, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     history.push("/workout/all")
@@ -119,7 +121,7 @@ const WorkoutForm = (props) => {
                 });
         }
         else {
-            axios.post("http://localhost:8000/api/workouts", { ...temp })
+            axios.post("http://localhost:8000/api/workouts", { ...temp }, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     setWorkoutForm({
@@ -137,7 +139,7 @@ const WorkoutForm = (props) => {
 
     function deleteWorkout(e){
         e.preventDefault();
-        axios.delete(`http://localhost:8000/api/workouts/${id.id}`)
+        axios.delete(`http://localhost:8000/api/workouts/${id.id}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 history.push("/workout/all");

@@ -35,25 +35,3 @@ module.exports.deleteWorkout = (req, res) => {
         })
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
-
-// module.exports.updateGoalData = (req, res) => {
-//     Goal.findOne({_id : req.params.id})
-//         .then((doc) => {
-//             item = doc.data.id(req.params.ele);
-//             item["val"] = req.body.val;
-//             doc.save();
-//             res.json({ data : data.id(req.params.ele) })
-//         })
-//         .catch(err => res.json({ msg: "An Error Occured", error: err }));
-// }
-
-// module.exports.deleteGoalData = (req, res) => {
-//     Goal.findOne({_id : req.params.id})
-//         .then((doc) => {
-//             console.log(doc);
-//             doc.data.pull({_id : req.params.ele})
-//             doc.save();
-//             res.json({ data : doc })
-//         })
-//         .catch(err => res.json({ msg: "An Error Occured", error: err }));
-// }

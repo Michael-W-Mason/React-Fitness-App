@@ -28,7 +28,7 @@ const Schedule = props => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/calendar")
+        axios.get("http://localhost:8000/api/calendar", {withCredentials: true})
             .then(res => {
                 console.log(res);
                 setEventArr(res.data.calendar[0]);
@@ -60,7 +60,7 @@ const Schedule = props => {
     }
 
     function submitHandler(){
-        axios.put(`http://localhost:8000/api/calendar/${calendarId}`, eventArr2)
+        axios.put(`http://localhost:8000/api/calendar/${calendarId}`, eventArr2, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 setChanges(false);

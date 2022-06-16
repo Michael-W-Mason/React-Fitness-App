@@ -27,7 +27,7 @@ const EditGoalForm = props => {
 
     useEffect(() => {
         if(refresh){
-            axios.get(`http://localhost:8000/api/goals/${id.id}`)
+            axios.get(`http://localhost:8000/api/goals/${id.id}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     setGoalData([...res.data.goal.data]);
@@ -61,7 +61,7 @@ const EditGoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.put(`http://localhost:8000/api/goals/${id.id}`, { ...formData })
+        axios.put(`http://localhost:8000/api/goals/${id.id}`, { ...formData }, {withCredentials: true})
             .then(res => {
                 console.log(res);
             })
@@ -72,7 +72,7 @@ const EditGoalForm = props => {
     }
 
     function deleteGoal() {
-        axios.delete(`http://localhost:8000/api/goals/${id.id}`)
+        axios.delete(`http://localhost:8000/api/goals/${id.id}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 history.push("/goals");
@@ -83,7 +83,7 @@ const EditGoalForm = props => {
     }
 
     function deleteGoalPoint(ele, i) {
-        axios.delete(`http://localhost:8000/api/goals/data/${id.id}/${ele}`)
+        axios.delete(`http://localhost:8000/api/goals/data/${id.id}/${ele}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 let arr = [...changesArr];
@@ -110,7 +110,7 @@ const EditGoalForm = props => {
 
     function goalHandler(e, ele, i) {
         e.preventDefault();
-        axios.put(`http://localhost:8000/api/goals/data/${id.id}/${ele}`, { ...goalDataForm })
+        axios.put(`http://localhost:8000/api/goals/data/${id.id}/${ele}`, { ...goalDataForm }, {withCredentials: true})
             .then(res => {
                 let arr = [...changesArr];
                 arr[i] = false; 
