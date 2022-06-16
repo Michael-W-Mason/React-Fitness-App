@@ -47,10 +47,12 @@ const Login = props => {
 
     function registerSubmit(e) {
         e.preventDefault();
-        axios.post("http://localhost:8000/api/user", { ...registerForm }, { withCredentials: true })
+        axios.post("http://localhost:8000/api/register", { ...registerForm }, { withCredentials: true })
             .then(res => {
                 console.log(res);
-                if (res.data.msg) {
+                if (res.data) {
+                    setUserId(res.data.userId);
+                    localStorage.setItem('userId', new String(res.data.userId));
                     history.push("/schedule");
                 }
             })

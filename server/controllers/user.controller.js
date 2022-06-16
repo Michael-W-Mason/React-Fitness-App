@@ -6,7 +6,10 @@ require('dotenv').config();
 module.exports.createUser = (req, res) => {
     User.create(req.body)
         .then(user => {
-            res.json({ msg: "success!", user: user })
+            const userToken = jwt.sign({
+                id: user._id
+            }, process.env.SECRET_KEY);
+            res.cookie("usertoken", userToken, process.env.SECRET_KEY, { httpOnly: true }).json({ userId: user._id});
         })
         .catch(err => res.json(err));
 }
@@ -23,11 +26,10 @@ module.exports.loginUser = async (req, res) => {
     const userToken = jwt.sign({
         id: user._id
     }, process.env.SECRET_KEY)
-    res.cookie("usertoken", userToken, process.env.SECRET_KEY, { httpOnly: true }).json({ userId : user._id});
+    res.cookie("usertoken", userToken, process.env.SECRET_KEY, { httpOnly: true }).json({ userId: user._id });
 }
 
 module.exports.logoutUser = async (req, res) => {
-    console.log("Logged Out");
     res.clearCookie('usertoken');
     res.sendStatus(200);
 }
