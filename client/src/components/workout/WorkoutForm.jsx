@@ -11,7 +11,7 @@ import { UserContext } from '../context/UserContext';
 const WorkoutForm = (props) => {
     const {userId, setUserId} = useContext(UserContext);
     const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
-    const defaultWorkoutStep = { type: "" };
+    const defaultWorkoutStep = { type: "" , id: ObjectId()};
 
     const [workoutForm, setWorkoutForm] = useState({
         name: "",
@@ -23,19 +23,19 @@ const WorkoutForm = (props) => {
     const id = useParams();
 
     useEffect(() => {
-        if (id.id) {
-            axios.get(`http://localhost:8000/api/workouts/${id.id}`, {withCredentials: true})
+        if (id.id && userId) {
+            axios.get(`http://localhost:8000/api/workouts/${id.id}/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
-                    let editForm = structuredClone(res.data.workout);
-                    editForm.workout.push({ type: "", _id: ObjectId()});
+                    let editForm = structuredClone(res.data.workout[0]);
+                    editForm.workout.push(defaultWorkoutStep);
                     setWorkoutForm(editForm);
                 })
                 .catch(err => {
                     console.log(err);
                 })
         }
-    }, [])
+    }, [userId])
 
     function formType(type, i) {
         switch (type) {
@@ -78,6 +78,9 @@ const WorkoutForm = (props) => {
 
     function submitHandler(e) {
         e.preventDefault();
+        if(!userId){
+            history.push("/");
+        }
         let temp = structuredClone(workoutForm);
         for(let i = 0; i < temp.workout.length; i++){
             let obj = temp.workout[i];
@@ -110,11 +113,12 @@ const WorkoutForm = (props) => {
                 }
             }
         }
+        temp.userId = userId;
         if (id.id) {
-            axios.put(`http://localhost:8000/api/workouts/${id.id}`, {...temp}, {withCredentials: true})
+            axios.put(`http://localhost:8000/api/workouts/${id.id}/${userId}`, {...temp}, {withCredentials: true})
                 .then(res => {
                     console.log(res);
-                    history.push("/workout/all")
+                    history.push("/workout")
                 })
                 .catch(err => {
                     console.log(err);
@@ -129,7 +133,7 @@ const WorkoutForm = (props) => {
                         workout: [{
                         }]
                     });
-                    history.push("/workout/all")
+                    history.push("/workout")
                 })
                 .catch(err => {
                     console.log(err);
@@ -139,10 +143,10 @@ const WorkoutForm = (props) => {
 
     function deleteWorkout(e){
         e.preventDefault();
-        axios.delete(`http://localhost:8000/api/workouts/${id.id}`, {withCredentials: true})
+        axios.delete(`http://localhost:8000/api/workouts/${id.id}/${userId}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
-                history.push("/workout/all");
+                history.push("/workout");
             })
             .catch(err => console.log(err));
     }
@@ -171,7 +175,6 @@ const WorkoutForm = (props) => {
                                     {formType(ele.type, i)}
                                 </div>
                             </div>
-
                         )
                     })
                 }

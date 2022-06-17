@@ -1,8 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 const GoalForm = props => {
+    const {userId, setUserId} = useContext(UserContext);
     const history = useHistory();
     const [formData, setFormData] = useState({
         name: "",
@@ -20,7 +23,7 @@ const GoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.post("http://localhost:8000/api/goals", {...formData}, {withCredentials: true})
+        axios.post(`http://localhost:8000/api/goals`, {...formData, userId : userId}, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 setFormData({

@@ -1,14 +1,16 @@
 const Goal = require("../models/goal.model");
+const { default: mongoose } = require("mongoose");
+
 
 module.exports.findOneGoal = (req, res) => {
-    Goal.findOne({ _id: req.params.id })
+    Goal.find({ _id: req.params.id, userId : mongoose.Types.ObjectId(req.params.userId) })
         .then(oneGoal => res.json({ goal: oneGoal }))
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
 
 
 module.exports.findAllGoals = (req, res) => {
-    Goal.find()
+    Goal.find({userId : mongoose.Types.ObjectId(req.params.userId)})
         .then(allGoals => res.json({ goal: allGoals }))
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
@@ -23,7 +25,7 @@ module.exports.createGoal = (req, res) => {
 }
 
 module.exports.editGoal = (req, res) => {
-    Goal.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+    Goal.findOneAndUpdate({ _id: req.params.id, userId : mongoose.Types.ObjectId(req.params.userId) }, req.body, { new: true })
         .then(editGoal => {
             res.json({ goal: editGoal })
         })
@@ -31,7 +33,7 @@ module.exports.editGoal = (req, res) => {
 }
 
 module.exports.deleteGoal = (req, res) => {
-    Goal.findOneAndDelete({ _id: req.params.id })
+    Goal.findOneAndDelete({ _id: req.params.id, userId : mongoose.Types.ObjectId(req.params.userId) })
         .then(deletedGoal => {
             res.json({ goal: deletedGoal })
         })

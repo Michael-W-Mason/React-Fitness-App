@@ -3,7 +3,7 @@ const { authenticate } = require('../config/jwt.config');
 
 
 module.exports = app => {
-    app.get("/api/calendar/", authenticate, calendarController.findallCalendar);
-    app.post("/api/calendar/", authenticate, calendarController.createCalendar);
-    app.put("/api/calendar/:id", authenticate, calendarController.editCalendar);
+    app.post("/api/calendar/:userId", authenticate, calendarController.createCalendar);
+    app.get("/api/calendar/:userId", authenticate, calendarController.findallCalendar);
+    app.put("/api/calendar/:id/:userId", authenticate, calendarController.editCalendar);
 }

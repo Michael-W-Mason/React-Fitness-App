@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import LineChart from "./LineChart";
 import { CogIcon } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { useContext } from "react";
 
 const Goals = (props) => {
 
-
+    const {userId, setUserId} = useContext(UserContext);
     const [goalObj, setgoalObj] = useState([])
     const [formData, setFormData] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(true);
@@ -16,8 +18,8 @@ const Goals = (props) => {
     const updateClassUnChange = "text-white bg-green-500 hover:bg-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
 
     useEffect(() => {
-        if (formSubmitted) {
-            axios.get("http://localhost:8000/api/goals", { withCredentials: true })
+        if (formSubmitted && userId) {
+            axios.get(`http://localhost:8000/api/goals/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setgoalObj(res.data.goal);
@@ -31,12 +33,11 @@ const Goals = (props) => {
                 });
             setFormSubmitted(false);
         }
-    }, [formSubmitted])
+    }, [formSubmitted, userId])
 
     function submitHandler(e, index) {
         e.preventDefault();
-        console.log({ ...formData[index] });
-        axios.put(`http://localhost:8000/api/goals/${formData[index]._id}`, { ...formData[index] }, { withCredentials: true })
+        axios.put(`http://localhost:8000/api/goals/${formData[index]._id}/${userId}`, { ...formData[index] }, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setFormData({});

@@ -28,11 +28,6 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    localStorage.clear();
-    localStorage.setItem('userId', new String(userId))
-  })
-
   return (
     <div className="App">
       <BrowserRouter basename={baseName}>

@@ -1,21 +1,22 @@
 const Calendar = require("../models/calendar.model");
+const { default: mongoose } = require("mongoose");
 
 module.exports.findallCalendar = (req, res) => {
-    Calendar.find()
+    Calendar.findOne({userId : mongoose.Types.ObjectId(req.params.userId)})
         .then(allCalendar => res.json({ calendar: allCalendar }))
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
 
 module.exports.createCalendar = (req, res) => {
-    Calendar.create(req.body)
-        .then(newGoal => {
-            res.json({ goal: newGoal })
+    Calendar.create({userId : mongoose.Types.ObjectId(req.params.userId)})
+        .then(newCalendar => {
+            res.json({ calendar: newCalendar })
         })
         .catch(err => res.json({ msg: "An Error Occured", error: err }));
 }
 
 module.exports.editCalendar = (req, res) => {
-    Calendar.findOne({ _id: req.params.id })
+    Calendar.findOne({ _id: req.params.id, userId: mongoose.Types.ObjectId(req.params.userId)})
         .then(doc => {
             doc["events"] = req.body;
             doc.save();

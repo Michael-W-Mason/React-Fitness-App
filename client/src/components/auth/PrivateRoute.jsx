@@ -5,7 +5,7 @@ function PrivateRoute({ component: Component, ...rest }) {
     return (
         <Route
             {...rest}
-            render={(props) => data !== undefined
+            render={(props) => data
                 ? <Component {...props} />
                 : <Redirect to={{ pathname: '/', state: { from: props.location } }} />}
         />

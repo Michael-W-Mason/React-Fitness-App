@@ -6,8 +6,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Drag from "./Drag";
 import Modal from "./Modal"
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 const Schedule = props => {
+    const { userId, serUserId } = useContext(UserContext);
     const changeClass = "w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2";
     const unChangeClass = "w-1/5 self-center text-white bg-green-500 hover:bg-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
 
@@ -17,7 +20,7 @@ const Schedule = props => {
     });
     const [event, setEvent] = useState({});
     const [eventArr, setEventArr] = useState({
-        events : [
+        events: [
         ]
     });
     const [eventArr2, setEventArr2] = useState([]);
@@ -25,42 +28,63 @@ const Schedule = props => {
     const [calendarId, setCalendarId] = useState("");
     const [changes, setChanges] = useState(false);
     const [countChanges, setCountChanges] = useState(0);
+    const [firstUser, setFirstUser] = useState(false);
 
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/calendar", {withCredentials: true})
-            .then(res => {
-                console.log(res);
-                setEventArr(res.data.calendar[0]);
-                setCalendarId(res.data.calendar[0]._id);
-            })
-    }, [])
+        if (userId) {
+            axios.get(`http://localhost:8000/api/calendar/${userId}`, { withCredentials: true })
+                .then(res => {
+                    console.log(res);
+                    if (res.data.calendar == null) {
+                        setFirstUser(true);
+                    }
+                    else {
+                        setEventArr(res.data.calendar);
+                        setCalendarId(res.data.calendar._id);
+                    }
+                })
+        }
+    }, [userId])
 
-    function getEventsArr(e){
-        if(countChanges > 1){
+    useEffect(() => {
+        if (firstUser === true) {
+            axios.post(`http://localhost:8000/api/calendar/${userId}`, {} , { withCredentials: true })
+                .then(res => {
+                    console.log(res);
+                    setEventArr(res.data.calendar);
+                    setCalendarId(res.data.calendar._id);
+                    setFirstUser(false);
+                })
+                .catch(err => console.log(err));
+        }
+    }, [firstUser])
+
+    function getEventsArr(e) {
+        if (countChanges > 1) {
             setChanges(true);
         }
         let arr = [];
-        for(let eventItem of e){
-            let obj = {title : eventItem.title, start : Date.parse(eventItem.start), end: Date.parse(eventItem.end), id : eventItem.id};
+        for (let eventItem of e) {
+            let obj = { title: eventItem.title, start: Date.parse(eventItem.start), end: Date.parse(eventItem.end), id: eventItem.id };
             arr.push(obj);
         }
         setEventArr2(arr);
         setCountChanges(countChanges + 1);
     }
 
-    function eventModal(e){
+    function eventModal(e) {
         setEvent(e);
-        for(let e_workout of workoutArr){
-            if(e_workout._id == e.event.id){
+        for (let e_workout of workoutArr) {
+            if (e_workout._id == e.event.id) {
                 setWorkout(e_workout);
             }
         }
         setModalTrigger(true);
     }
 
-    function submitHandler(){
-        axios.put(`http://localhost:8000/api/calendar/${calendarId}`, eventArr2, {withCredentials: true})
+    function submitHandler() {
+        axios.put(`http://localhost:8000/api/calendar/${calendarId}/${userId}`, eventArr2, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setChanges(false);
@@ -92,7 +116,7 @@ const Schedule = props => {
                 events={eventArr}
             />
             <Drag workoutArr={workoutArr} setWorkoutArr={setWorkoutArr} />
-            <button className={changes ? unChangeClass : changeClass } onClick={submitHandler}>{changes ? "Save Changes" : "Changes Saved"}</button>
+            <button className={changes ? unChangeClass : changeClass} onClick={submitHandler}>{changes ? "Save Changes" : "Changes Saved"}</button>
         </div>
 
     );

@@ -22,6 +22,9 @@ const goalSchema = new mongoose.Schema({
                 default : Date.now
             }
         }]
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId
     }
 }, {timestamps : true});
 

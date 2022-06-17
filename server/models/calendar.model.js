@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const calendarSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, "Goal is required"]
+    },
     events : [{
         id: {
             type: String
@@ -13,8 +17,10 @@ const calendarSchema = new mongoose.Schema({
         },
         end: {
             type: Date
-        }
-    }, {_id: false}]
+        },
+
+    },
+    {_id: false}],
 }, {timestamps : true});
 
 const Calendar = mongoose.model('calendar', calendarSchema);

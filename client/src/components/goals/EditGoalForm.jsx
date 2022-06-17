@@ -2,8 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/outline";
+import { UserContext } from "../context/UserContext";
+import { useContext } from "react";
 
 const EditGoalForm = props => {
+    const {userId, setUserId} = useContext(UserContext);
     const id = useParams();
     const history = useHistory();
     const [refresh, setRefresh] = useState(true);
@@ -26,22 +29,22 @@ const EditGoalForm = props => {
     const mainClassUnChange = "w-1/5 self-center text-white bg-green-500 hover:bg-green-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
 
     useEffect(() => {
-        if(refresh){
-            axios.get(`http://localhost:8000/api/goals/${id.id}`, {withCredentials: true})
+        if(refresh && userId){
+            axios.get(`http://localhost:8000/api/goals/${id.id}/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
-                    setGoalData([...res.data.goal.data]);
+                    setGoalData([...res.data.goal[0].data]);
                     setFormData({
                         ...formData,
-                        name: res.data.goal.name,
-                        unit: res.data.goal.unit,
-                        goal: res.data.goal.goal,
+                        name: res.data.goal[0].name,
+                        unit: res.data.goal[0].unit,
+                        goal: res.data.goal[0].goal,
                     });
                     setRefresh(false);
                 })
                 .catch(err => console.log(err));
         }
-    }, [refresh])
+    }, [refresh, userId])
 
     useEffect(() => {
         if(goalData.length < 0){
@@ -61,7 +64,7 @@ const EditGoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.put(`http://localhost:8000/api/goals/${id.id}`, { ...formData }, {withCredentials: true})
+        axios.put(`http://localhost:8000/api/goals/${id.id}/${userId}`, { ...formData }, {withCredentials: true})
             .then(res => {
                 console.log(res);
             })
@@ -72,7 +75,7 @@ const EditGoalForm = props => {
     }
 
     function deleteGoal() {
-        axios.delete(`http://localhost:8000/api/goals/${id.id}`, {withCredentials: true})
+        axios.delete(`http://localhost:8000/api/goals/${id.id}/${userId}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 history.push("/goals");
@@ -89,6 +92,7 @@ const EditGoalForm = props => {
                 let arr = [...changesArr];
                 arr.splice(i, 1);
                 setChangesArr(arr);
+                setGoalData(goalData.splice(i, 1));
                 setRefresh(true);
             })
             .catch(err => {

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import { useEffect, useState, useContext } from "react";
 import CircuitCard from "./CircuitCard";
 import SetRepCard from "./SetRepCard";
 import TimeDistCard from "./TimeDistCard";
@@ -7,16 +8,19 @@ import { useHistory, Link } from "react-router-dom";
 
 const WorkoutList = props => {
 
+    const {userId, setUserId} = useContext(UserContext);
     const [workoutList, setWorkoutList] = useState([]);
     const history = useHistory()
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/workouts", { withCredentials: true })
-            .then(res => {
-                console.log(res);
-                setWorkoutList(res.data.workout)
-            })
-    }, [])
+        if(userId){
+            axios.get(`http://localhost:8000/api/workouts/${userId}`, { withCredentials: true })
+                .then(res => {
+                    console.log(res);
+                    setWorkoutList(res.data.workout)
+                })
+        }
+    }, [userId])
 
     function parseWorkout(obj) {
         switch (obj.type) {
