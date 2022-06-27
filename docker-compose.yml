@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.3'
 services:
   fitness-server:
     build:
@@ -22,8 +22,6 @@ services:
       - "3000:3000"
     networks:
       - app-network
-    depends_on:
-      - server
 networks:
   app-network:
     external: true
