@@ -7,7 +7,7 @@ require('dotenv').config();
 
 app.use(cookieParser());
 // app.use(cors({credentials: true, origin: "mni"}));
-app.options('*', cors({credentials: true}))
+app.options(cors({credentials: true, origin: "https://michaelmason.dev"}))
 
 require("./config/mongoose.config");
 app.use(express.json(), express.urlencoded({ extended: true }));
