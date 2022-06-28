@@ -26,7 +26,7 @@ module.exports.loginUser = async (req, res) => {
     const userToken = jwt.sign({
         id: user._id
     }, process.env.SECRET_KEY)
-    res.cookie("usertokensasdf", userToken, {sameSite: 'none'}).json({ userId: user._id });
+    res.cookie("usertoken", userToken, process.env.SECRET_KEY, { httpOnly: true, domain: "michaelmason.dev", sameSite: false, secure: false }).json({ userId: user._id });
 }
 
 module.exports.logoutUser = async (req, res) => {
