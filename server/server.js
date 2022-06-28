@@ -9,7 +9,7 @@ app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "https://michaelmason.dev" }));
 
 require("./config/mongoose.config");
-app.use(express.json(), express.urlencoded({ extended: true }));
+app.use(express.json(), express.urlencoded({ extended: true, credentials: true }));
 require("./routes/goal.routes")(app);
 require("./routes/workout.routes")(app);
 require("./routes/calendar.routes")(app);
