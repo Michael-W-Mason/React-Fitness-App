@@ -45,7 +45,7 @@ const Login = props => {
     function loginSubmit(e) {
         e.preventDefault();
         setLoginError({ email: "", password: "" });
-        axios.post("http://localhost:3001/api/login", { ...loginForm }, {withCredentials: true})
+        axios.post("http://localhost:3001/api/login", { ...loginForm })
             .then(res => {
                 console.log(res);
                 if (res.data) {
