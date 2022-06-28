@@ -112,7 +112,7 @@ const Login = props => {
     return (
         <div style={{height: "500px"}} className="w-2/5 fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white border-y-2 border-b-2 border-gray-100 shadow-md">
             <div className="h-14 bg-blue-700 flex items-center justify-center mb-2">
-                <h1 className="text-white  self-center block text-xl font-bold text-center">Welcome to MyWorkoutPal</h1>
+                <h1 className="text-white  self-center block text-xl font-bold text-center">Welcome to MyWorkoutPal!</h1>
             </div>
             {formState ?
                 <form className="flex h-3/4 flex-col items-center justify-center" onSubmit={loginSubmit}>
