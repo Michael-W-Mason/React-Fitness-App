@@ -7,6 +7,7 @@ require('dotenv').config();
 
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "https://michaelmason.dev" }));
+app.set("trust proxy", true);
 
 require("./config/mongoose.config");
 app.use(express.json(), express.urlencoded({ extended: true, credentials: true }));
