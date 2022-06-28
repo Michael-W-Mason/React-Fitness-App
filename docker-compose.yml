@@ -9,7 +9,7 @@ services:
     container_name: React-Fitness-App-Server
     command: node server.js
     ports:
-      - "8000:8000"
+      - "3001:3001"
     networks:
       - app-network
     restart: unless-stopped

@@ -8,7 +8,7 @@ const Drag = props => {
     const {userId, setUserId} = useContext(UserContext);
     useEffect(() => {
         if(userId){
-            axios.get(`http://localhost:8000/api/workouts/${userId}`, {withCredentials: true})
+            axios.get(`http://localhost:3001/api/workouts/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     props.setWorkoutArr(res.data.workout)

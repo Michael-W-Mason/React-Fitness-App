@@ -45,7 +45,7 @@ const Login = props => {
     function loginSubmit(e) {
         e.preventDefault();
         setLoginError({ email: "", password: "" });
-        axios.post("http://localhost:8000/api/login", { ...loginForm })
+        axios.post("http://localhost:3001/api/login", { ...loginForm })
             .then(res => {
                 console.log(res);
                 if (res.data) {
@@ -64,7 +64,7 @@ const Login = props => {
     function registerSubmit(e) {
         e.preventDefault();
         setRegisterError({ ...registerError, firstName: "", lastName: "", email: "", password: "", confirmPassword: ""});
-        axios.post("http://localhost:8000/api/register", { ...registerForm })
+        axios.post("http://localhost:3001/api/register", { ...registerForm })
             .then(res => {
                 console.log(res);
                 if(res.data.errors) {
