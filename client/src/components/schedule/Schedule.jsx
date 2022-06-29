@@ -33,7 +33,7 @@ const Schedule = props => {
 
     useEffect(() => {
         if (userId) {
-            axios.get(`http://localhost:3001/api/calendar/${userId}`, { withCredentials: true })
+            axios.get(`https://michaelmason.dev/api/calendar/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     if (res.data.calendar == null) {
@@ -49,7 +49,7 @@ const Schedule = props => {
 
     useEffect(() => {
         if (firstUser === true) {
-            axios.post(`http://localhost:3001/api/calendar/${userId}`, {} , { withCredentials: true })
+            axios.post(`https://michaelmason.dev/api/calendar/${userId}`, {} , { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setEventArr(res.data.calendar);
@@ -84,7 +84,7 @@ const Schedule = props => {
     }
 
     function submitHandler() {
-        axios.put(`http://localhost:3001/api/calendar/${calendarId}/${userId}`, eventArr2, { withCredentials: true })
+        axios.put(`https://michaelmason.dev/api/calendar/${calendarId}/${userId}`, eventArr2, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setChanges(false);

@@ -30,7 +30,7 @@ const EditGoalForm = props => {
 
     useEffect(() => {
         if(refresh && userId){
-            axios.get(`http://localhost:3001/api/goals/${id.id}/${userId}`, {withCredentials: true})
+            axios.get(`https://michaelmason.dev/${id.id}/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     setGoalData([...res.data.goal[0].data]);
@@ -64,7 +64,7 @@ const EditGoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/goals/${id.id}/${userId}`, { ...formData }, {withCredentials: true})
+        axios.put(`https://michaelmason.dev/api/goals/${id.id}/${userId}`, { ...formData }, {withCredentials: true})
             .then(res => {
                 console.log(res);
             })
@@ -75,7 +75,7 @@ const EditGoalForm = props => {
     }
 
     function deleteGoal() {
-        axios.delete(`http://localhost:3001/api/goals/${id.id}/${userId}`, {withCredentials: true})
+        axios.delete(`https://michaelmason.dev/api/goals/${id.id}/${userId}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 history.push("/goals");
@@ -86,7 +86,7 @@ const EditGoalForm = props => {
     }
 
     function deleteGoalPoint(ele, i) {
-        axios.delete(`http://localhost:3001/api/goals/data/${id.id}/${ele}`, {withCredentials: true})
+        axios.delete(`https://michaelmason.dev/api/goals/data/${id.id}/${ele}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 let arr = [...changesArr];
@@ -114,7 +114,7 @@ const EditGoalForm = props => {
 
     function goalHandler(e, ele, i) {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/goals/data/${id.id}/${ele}`, { ...goalDataForm }, {withCredentials: true})
+        axios.put(`https://michaelmason.dev/api/goals/data/${id.id}/${ele}`, { ...goalDataForm }, {withCredentials: true})
             .then(res => {
                 let arr = [...changesArr];
                 arr[i] = false; 

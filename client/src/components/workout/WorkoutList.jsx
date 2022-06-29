@@ -14,7 +14,7 @@ const WorkoutList = props => {
 
     useEffect(() => {
         if(userId){
-            axios.get(`http://localhost:3001/api/workouts/${userId}`, { withCredentials: true })
+            axios.get(`https://michaelmason.dev/api/workouts/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setWorkoutList(res.data.workout)

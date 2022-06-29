@@ -19,7 +19,7 @@ const Goals = (props) => {
 
     useEffect(() => {
         if (formSubmitted && userId) {
-            axios.get(`http://localhost:3001/api/goals/${userId}`, { withCredentials: true })
+            axios.get(`https://michaelmason.dev/api/goals/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setgoalObj(res.data.goal);
@@ -37,7 +37,7 @@ const Goals = (props) => {
 
     function submitHandler(e, index) {
         e.preventDefault();
-        axios.put(`http://localhost:3001/api/goals/${formData[index]._id}/${userId}`, { ...formData[index] }, { withCredentials: true })
+        axios.put(`https://michaelmason.dev/api/goals/${formData[index]._id}/${userId}`, { ...formData[index] }, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setFormData({});

@@ -24,7 +24,7 @@ const WorkoutForm = (props) => {
 
     useEffect(() => {
         if (id.id && userId) {
-            axios.get(`http://localhost:3001/api/workouts/${id.id}/${userId}`, {withCredentials: true})
+            axios.get(`https://michaelmason.dev/api/workouts/${id.id}/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     let editForm = structuredClone(res.data.workout[0]);
@@ -115,7 +115,7 @@ const WorkoutForm = (props) => {
         }
         temp.userId = userId;
         if (id.id) {
-            axios.put(`http://localhost:3001/api/workouts/${id.id}/${userId}`, {...temp}, {withCredentials: true})
+            axios.put(`https://michaelmason.dev/api/workouts/${id.id}/${userId}`, {...temp}, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     history.push("/workout")
@@ -125,7 +125,7 @@ const WorkoutForm = (props) => {
                 });
         }
         else {
-            axios.post("http://localhost:3001/api/workouts", { ...temp }, {withCredentials: true})
+            axios.post("https://michaelmason.dev/api/workouts", { ...temp }, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     setWorkoutForm({
@@ -143,7 +143,7 @@ const WorkoutForm = (props) => {
 
     function deleteWorkout(e){
         e.preventDefault();
-        axios.delete(`http://localhost:3001/api/workouts/${id.id}/${userId}`, {withCredentials: true})
+        axios.delete(`https://michaelmason.dev/api/workouts/${id.id}/${userId}`, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 history.push("/workout");

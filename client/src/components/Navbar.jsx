@@ -8,7 +8,7 @@ const NavBar = (props) => {
     const history = useHistory()
     function logout(){
         localStorage.clear();
-        axios.get("http://localhost:3001/api/logout", {withCredentials: true})
+        axios.get("https://michaelmason.dev/api/logout", {withCredentials: true})
             .then(res => history.push("/"))
             .catch(err => console.log(err));
         

@@ -23,7 +23,7 @@ const GoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.post(`http://localhost:3001/api/goals`, {...formData, userId : userId}, {withCredentials: true})
+        axios.post(`https://michaelmason.dev/api/goals`, {...formData, userId : userId}, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 setFormData({
