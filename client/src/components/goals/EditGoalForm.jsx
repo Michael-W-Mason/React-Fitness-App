@@ -30,7 +30,7 @@ const EditGoalForm = props => {
 
     useEffect(() => {
         if(refresh && userId){
-            axios.get(`https://michaelmason.dev/${id.id}/${userId}`, {withCredentials: true})
+            axios.get(`https://michaelmason.dev/api/goals/${id.id}/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     setGoalData([...res.data.goal[0].data]);
