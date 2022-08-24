@@ -1,11 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import { UserContext } from "../context/UserContext";
-import { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import NavBar from "../Navbar";
 
 const GoalForm = props => {
-    const {userId, setUserId} = useContext(UserContext);
+    const userId = localStorage.getItem('userId');
     const history = useHistory();
     const [formData, setFormData] = useState({
         name: "",
@@ -23,7 +22,7 @@ const GoalForm = props => {
 
     function submitHandler(e) {
         e.preventDefault();
-        axios.post(`https://michaelmason.dev/api/goals`, {...formData, userId : userId}, {withCredentials: true})
+        axios.post(`http://localhost:3001/api/goals`, {...formData, userId : userId}, {withCredentials: true})
             .then(res => {
                 console.log(res);
                 setFormData({
@@ -39,6 +38,8 @@ const GoalForm = props => {
     }
 
     return (
+        <>
+        <NavBar />        
         <div className="max-w-5xl mx-auto bg-white p-14 border-2 border-gray-100 shadow-md mt-6">
             <form className='flex flex-col justify-evenly gap-10' onSubmit={submitHandler}>
                 {/* Workout Name */}
@@ -55,6 +56,7 @@ const GoalForm = props => {
                 <button type='submit' className='w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2'>Create Goal</button>
             </form>
         </div>
+        </>
     );
 }
 

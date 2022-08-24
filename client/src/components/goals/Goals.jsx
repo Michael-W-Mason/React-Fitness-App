@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import LineChart from "./LineChart";
 import { CogIcon } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
-import { useContext } from "react";
+import NavBar from "../Navbar";
+
 
 const Goals = (props) => {
-
-    const {userId, setUserId} = useContext(UserContext);
+    const userId = localStorage.getItem('userId');
     const [goalObj, setgoalObj] = useState([])
     const [formData, setFormData] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(true);
@@ -19,7 +18,7 @@ const Goals = (props) => {
 
     useEffect(() => {
         if (formSubmitted && userId) {
-            axios.get(`https://michaelmason.dev/api/goals/${userId}`, { withCredentials: true })
+            axios.get(`http://localhost:3001/api/goals/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setgoalObj(res.data.goal);
@@ -37,7 +36,7 @@ const Goals = (props) => {
 
     function submitHandler(e, index) {
         e.preventDefault();
-        axios.put(`https://michaelmason.dev/api/goals/${formData[index]._id}/${userId}`, { ...formData[index] }, { withCredentials: true })
+        axios.put(`http://localhost:3001/api/goals/${formData[index]._id}/${userId}`, { ...formData[index] }, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setFormData({});
@@ -67,6 +66,7 @@ const Goals = (props) => {
 
     return (
         <>
+            <NavBar />
             <div className="flex flex-col items-center my-4 sticky">
                 <Link className="text-white bg-amber-500 hover:bg-amber-800 px-4 py-2 rounded-lg" to="/goals/add">Click Here to Add a New Goal</Link>
             </div>

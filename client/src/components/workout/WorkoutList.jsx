@@ -1,20 +1,19 @@
 import axios from "axios";
-import { UserContext } from "../context/UserContext";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import CircuitCard from "./CircuitCard";
 import SetRepCard from "./SetRepCard";
 import TimeDistCard from "./TimeDistCard";
 import { useHistory, Link } from "react-router-dom";
+import NavBar from "../Navbar";
 
 const WorkoutList = props => {
-
-    const {userId, setUserId} = useContext(UserContext);
+    const userId = localStorage.getItem('userId');
     const [workoutList, setWorkoutList] = useState([]);
     const history = useHistory()
 
     useEffect(() => {
-        if(userId){
-            axios.get(`https://michaelmason.dev/api/workouts/${userId}`, { withCredentials: true })
+        if (userId) {
+            axios.get(`http://localhost:3001/api/workouts/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setWorkoutList(res.data.workout)
@@ -36,6 +35,7 @@ const WorkoutList = props => {
 
     return (
         <>
+            <NavBar />
             <div className="flex flex-col items-center my-4 sticky">
                 <Link className="text-white bg-amber-500 hover:bg-amber-800 px-4 py-2 rounded-lg" to="/workout/add">Click Here to Add a New Workout</Link>
             </div>

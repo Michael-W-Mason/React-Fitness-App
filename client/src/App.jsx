@@ -6,7 +6,6 @@ import EditGoalForm from './components/goals/EditGoalForm';
 import WorkoutList from './components/workout/WorkoutList';
 import Login from './components/auth/Login';
 import PrivateRoute from './components/auth/PrivateRoute';
-import { UserContext } from './components/context/UserContext';
 import {
   BrowserRouter,
   Switch,
@@ -14,39 +13,27 @@ import {
 } from "react-router-dom";
 import WorkoutForm from './components/workout/WorkoutForm';
 import Schedule from './components/schedule/Schedule';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 
 function App() {
-  const baseName = process.env.REACT_APP_BASENAME || null;
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const data = localStorage.getItem('userId');
-    if(data){
-      setUserId(data);
-    }
-  }, [])
+  const [userId, setUserId] = useState({});
 
   return (
     <div className="App">
-      <BrowserRouter basename={baseName}>
-        <UserContext.Provider value={{ userId, setUserId }}>
-          <Switch>
-            <Route exact path="/" component={Login} />
-            <>
-              <NavBar />
-              <PrivateRoute exact path="/workout" component={WorkoutList} />
-              <PrivateRoute path="/workout/add" component={WorkoutForm} />
-              <PrivateRoute path="/workout/edit/:id" component={WorkoutForm} />
-              <PrivateRoute exact path="/goals" component={Goals} />
-              <PrivateRoute path="/goals/edit_goal/:id" component={EditGoalForm} />
-              <PrivateRoute path="/goals/add" component={GoalForm} />
-              <PrivateRoute path="/schedule" component={Schedule} />
-            </>
-
-          </Switch>
-        </UserContext.Provider>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" >
+            <Login userId={userId} setUserId={setUserId} />
+          </Route>
+          <PrivateRoute exact path="/workout" component={WorkoutList} userId={userId} />
+          <PrivateRoute path="/workout/add" component={WorkoutForm} userId={userId} />
+          <PrivateRoute path="/workout/edit/:id" component={WorkoutForm} userId={userId} />
+          <PrivateRoute exact path="/goals" component={Goals} userId={userId} />
+          <PrivateRoute path="/goals/edit_goal/:id" component={EditGoalForm} userId={userId} />
+          <PrivateRoute path="/goals/add" component={GoalForm} userId={userId} />
+          <PrivateRoute path="/schedule" component={Schedule} userId={userId} />
+        </Switch>
       </BrowserRouter>
     </div>
   );

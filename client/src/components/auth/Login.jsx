@@ -1,12 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import { UserContext } from "../context/UserContext";
 
 const Login = props => {
-
-    const { userId, setUserId } = useContext(UserContext);
     const history = useHistory();
     const [formState, setFormState] = useState(true);
     const [loginForm, setLoginForm] = useState({
@@ -45,16 +42,17 @@ const Login = props => {
     function loginSubmit(e) {
         e.preventDefault();
         setLoginError({ email: "", password: "" });
-        axios.post("https://michaelmason.dev/api/login", { ...loginForm }, {withCredentials: true})
+        axios.post("http://localhost:3001/api/login", { ...loginForm }, { withCredentials: true })
             .then(res => {
                 console.log(res);
-                if (res.data) {
-                    setUserId(res.data.userId);
-                    localStorage.setItem('userId', new String(res.data.userId))
+                if (res.data.userId !== undefined) {
+                    props.setUserId(res.data.userId);
+                    localStorage.setItem('userId', res.data.userId);
                     history.push("/schedule");
                 }
             })
             .catch(err => {
+                console.log(err);
                 if (err.response.status === 400) {
                     setLoginError({ ...loginError, email: "Invalid Email / Password" })
                 }
@@ -63,21 +61,22 @@ const Login = props => {
 
     function registerSubmit(e) {
         e.preventDefault();
-        setRegisterError({ ...registerError, firstName: "", lastName: "", email: "", password: "", confirmPassword: ""});
-        axios.post("https://michaelmason.dev/api/register", { ...registerForm }, {withCredentials: true})
+        setRegisterError({ ...registerError, firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+        axios.post("http://localhost:3001/api/register", { ...registerForm }, { withCredentials: true })
             .then(res => {
                 console.log(res);
-                if(res.data.errors) {
-                    setRegisterError({...registerError, 
-                        firstName: res.data.errors.firstName? res.data.errors.firstName.message : "",
-                        lastName: res.data.errors.lastName? res.data.errors.lastName.message : "",
-                        email: res.data.errors.email? res.data.errors.email.message : "",
-                        password: res.data.errors.password? res.data.errors.password.message : "",
-                        confirmPassword: res.data.errors.confirmPassword? res.data.errors.confirmPassword.message : ""
+                if (res.data.errors) {
+                    setRegisterError({
+                        ...registerError,
+                        firstName: res.data.errors.firstName ? res.data.errors.firstName.message : "",
+                        lastName: res.data.errors.lastName ? res.data.errors.lastName.message : "",
+                        email: res.data.errors.email ? res.data.errors.email.message : "",
+                        password: res.data.errors.password ? res.data.errors.password.message : "",
+                        confirmPassword: res.data.errors.confirmPassword ? res.data.errors.confirmPassword.message : ""
                     });
                 }
                 if (res.data.userId) {
-                    setUserId(res.data.userId);
+                    props.setUserId(res.data.userId);
                     localStorage.setItem('userId', new String(res.data.userId));
                     history.push("/schedule");
                 }
@@ -110,7 +109,7 @@ const Login = props => {
     }
 
     return (
-        <div style={{height: "500px"}} className="w-2/5 fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white border-y-2 border-b-2 border-gray-100 shadow-md">
+        <div style={{ height: "500px" }} className="w-2/5 fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white border-y-2 border-b-2 border-gray-100 shadow-md">
             <div className="h-14 bg-blue-700 flex items-center justify-center mb-2">
                 <h1 className="text-white  self-center block text-xl font-bold text-center">Welcome to MyWorkoutPal!</h1>
             </div>

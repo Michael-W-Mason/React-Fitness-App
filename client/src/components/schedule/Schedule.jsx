@@ -6,13 +6,12 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Drag from "./Drag";
 import Modal from "./Modal"
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+import NavBar from '../Navbar';
 
 const Schedule = props => {
-    const { userId, serUserId } = useContext(UserContext);
     const changeClass = "w-1/5 self-center text-white bg-amber-500 hover:bg-amber-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2";
-    const unChangeClass = "w-1/5 self-center text-white bg-green-500 hover:bg-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
+    const unChangeClass = "w-1/5 self-center text-white bg-green-500 hover:bg-green-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2";
+    const userId = localStorage.getItem('userId');
 
     const [workoutArr, setWorkoutArr] = useState([]);
     const [workout, setWorkout] = useState({
@@ -33,7 +32,7 @@ const Schedule = props => {
 
     useEffect(() => {
         if (userId) {
-            axios.get(`https://michaelmason.dev/api/calendar/${userId}`, { withCredentials: true })
+            axios.get(`http://localhost:3001/api/calendar/${userId}`, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     if (res.data.calendar == null) {
@@ -49,7 +48,7 @@ const Schedule = props => {
 
     useEffect(() => {
         if (firstUser === true) {
-            axios.post(`https://michaelmason.dev/api/calendar/${userId}`, {} , { withCredentials: true })
+            axios.post(`http://localhost:3001/api/calendar/${userId}`, {}, { withCredentials: true })
                 .then(res => {
                     console.log(res);
                     setEventArr(res.data.calendar);
@@ -84,7 +83,7 @@ const Schedule = props => {
     }
 
     function submitHandler() {
-        axios.put(`https://michaelmason.dev/api/calendar/${calendarId}/${userId}`, eventArr2, { withCredentials: true })
+        axios.put(`http://localhost:3001/api/calendar/${calendarId}/${userId}`, eventArr2, { withCredentials: true })
             .then(res => {
                 console.log(res);
                 setChanges(false);
@@ -94,30 +93,33 @@ const Schedule = props => {
     }
 
     return (
-        <div className='flex flex-col p-4'>
-            <Modal modalTrigger={modalTrigger} setModalTrigger={setModalTrigger} workout={workout} event={event} />
-            <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                height="65vh"
-                aspectRatio="0.2"
-                themeSystem='bootstrap5'
-                expandRows={true}
-                allDaySlot={false}
-                slotDuration='04:00:00'
-                slotLabelInterval='00:00:00'
-                droppable={true}
-                eventOverlap={false}
-                editable={true}
-                displayEventTime={false}
-                eventClick={(e) => eventModal(e)}
-                eventsSet={(e) => getEventsArr(e)}
-                eventBackgroundColor={"rgb(26 86 219)"}
-                events={eventArr}
-            />
-            <Drag workoutArr={workoutArr} setWorkoutArr={setWorkoutArr} />
-            <button className={changes ? unChangeClass : changeClass} onClick={submitHandler}>{changes ? "Save Changes" : "Changes Saved"}</button>
-        </div>
+        <>
+            <NavBar />
+            <div className='flex flex-col p-4'>
+                <Modal modalTrigger={modalTrigger} setModalTrigger={setModalTrigger} workout={workout} event={event} />
+                <FullCalendar
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
+                    height="65vh"
+                    aspectRatio="0.2"
+                    themeSystem='bootstrap5'
+                    expandRows={true}
+                    allDaySlot={false}
+                    slotDuration='04:00:00'
+                    slotLabelInterval='00:00:00'
+                    droppable={true}
+                    eventOverlap={false}
+                    editable={true}
+                    displayEventTime={false}
+                    eventClick={(e) => eventModal(e)}
+                    eventsSet={(e) => getEventsArr(e)}
+                    eventBackgroundColor={"rgb(26 86 219)"}
+                    events={eventArr}
+                />
+                <Drag workoutArr={workoutArr} setWorkoutArr={setWorkoutArr} />
+                <button className={changes ? unChangeClass : changeClass} onClick={submitHandler}>{changes ? "Save Changes" : "Changes Saved"}</button>
+            </div>
+        </>
 
     );
 }

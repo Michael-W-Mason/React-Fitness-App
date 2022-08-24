@@ -1,5 +1,4 @@
 import { Link, useHistory } from "react-router-dom";
-import { UserCircleIcon } from "@heroicons/react/outline"
 import '../App.css';
 import axios from "axios";
 
@@ -8,7 +7,7 @@ const NavBar = (props) => {
     const history = useHistory()
     function logout(){
         localStorage.clear();
-        axios.get("https://michaelmason.dev/api/logout", {withCredentials: true})
+        axios.get("http://localhost:3001/api/logout", {withCredentials: true})
             .then(res => history.push("/"))
             .catch(err => console.log(err));
         

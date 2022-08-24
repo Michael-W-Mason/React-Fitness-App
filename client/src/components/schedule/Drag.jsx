@@ -1,14 +1,13 @@
-import { UserContext } from "../context/UserContext";
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { Draggable } from "@fullcalendar/interaction";
 
 
 const Drag = props => {
-    const {userId, setUserId} = useContext(UserContext);
+    const userId = localStorage.getItem('userId');
     useEffect(() => {
         if(userId){
-            axios.get(`https://michaelmason.dev/api/workouts/${userId}`, {withCredentials: true})
+            axios.get(`http://localhost:3001/api/workouts/${userId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res);
                     props.setWorkoutArr(res.data.workout)
